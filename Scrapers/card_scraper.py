@@ -1,5 +1,6 @@
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
+from concurrent.futures import ThreadPoolExecutor
 import re,json
 
 def listprint(l):
@@ -74,7 +75,7 @@ def get_card(card_number:str)->dict:
         "hp" : stats[0],
         "atk" : stats[1],
         "def" : stats[2],
-        "links" : list(content),
+        "links" : list(filter(lambda x : x != "Condition:",list(content))),
         "categories": list(categories)
     }
 
@@ -82,11 +83,7 @@ if __name__ == "__main__":
     card_list = []
     for i in range(1,41):
         card_list += get_page(i)
-    # listprint(card_list)
-    # print(get_card(card_list[0]))
-    jn = []
-    for i in card_list:
-        jn.append(get_card(i))
-    print(len(jn))
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        results = list(executor.map(get_card, card_list))
     with open("card_output.json", "w") as f:
-        json.dump(jn, f, indent=4)
+        json.dump(results, f, indent=4)

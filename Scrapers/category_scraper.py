@@ -20,7 +20,7 @@ if __name__ == "__main__":
         images = soup.find_all('img', alt=True)
         s = ""
         for img in images:
-            s +=  img['alt'] + "\n"
+            s +=  img['alt'].strip() + "\n"
         with open("category_output.txt", "w") as f:
             f.write(s)
 

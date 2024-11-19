@@ -12,15 +12,12 @@ if __name__ == "__main__":
         page = browser.new_page()
         page.goto(website)
 
-        # Wait for images to load
-        # page.wait_for_selector('img[alt]', timeout=10000)  # Wait up to 10 seconds
-
         # Parse with BeautifulSoup
         soup = BeautifulSoup(page.content(), 'html.parser')
         images = soup.find_all('div',class_="text")
         s = ""
         for img in images:
-            s +=  img.get_text() + "\n"
+            s +=  img.get_text().strip() + "\n"
         with open("link_output.txt", "w") as f:
             f.write(s)
 

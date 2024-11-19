@@ -25,3 +25,16 @@ CREATE TABLE LinkSkills (
 
 \copy Cards (name, title, hp, atk, def) FROM 'C:\\Users\\gg311\\PycharmProjects\\pythonProject6\\Scrapers\\card_output.csv'
  WITH CSV HEADER
+
+ CREATE TABLE CardLinkSkills (
+    card_id INTEGER REFERENCES Cards(card_id) ON DELETE CASCADE,
+    link_skill_id INTEGER REFERENCES LinkSkills(link_skill_id) ON DELETE CASCADE,
+    PRIMARY KEY (card_id, link_skill_id)
+);
+
+CREATE TABLE CardCategories (
+    card_id INTEGER REFERENCES Cards(card_id) ON DELETE CASCADE,
+    category_id INTEGER REFERENCES Categories(category_id) ON DELETE CASCADE,
+    PRIMARY KEY (card_id, category_id)
+);
+
