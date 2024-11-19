@@ -11,9 +11,12 @@ namespace DokkanAPI.Models
         public string? Title { get; set; }
         [Column("name")]
         public string? Name { get; set; }
-        public int hp { get; init; }
-        public int atk { get; init; }
-        public int def { get; init; }
+        [Column("hp")]
+        public int Hp { get; init; }
+        [Column("atk")]
+        public int Atk { get; init; }
+        [Column("def")]
+        public int Def { get; init; }
 
         public static GetCardsDTO ToGetCardsDto(Card card)
         {
@@ -22,9 +25,9 @@ namespace DokkanAPI.Models
                 Id = card.Id,
                 Name = card.Name,
                 Title = card.Title,
-                Hp = card.hp,
-                Atk = card.atk,
-                Def = card.def
+                Hp = card.Hp,
+                Atk = card.Atk,
+                Def = card.Def
             };
         }
     }

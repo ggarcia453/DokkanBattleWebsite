@@ -29,10 +29,17 @@ public class CardController : ControllerBase
         }
     }
 
-    [HttpGet("{id}")] // Add this attribute
+    [HttpGet("id={id}")] // Add this attribute
     public async Task<IActionResult> Get(int id)
     {
-        var card = await _cardService.FindCard(id);
+        var card = await _cardService.FindCardID(id);
         return Ok(card);
+    }
+
+    [HttpGet("name={name}")]
+    public async Task<IActionResult> Get(string name)
+    {
+        var cards = await _cardService.FindCardName(name);
+        return Ok(cards);
     }
 }

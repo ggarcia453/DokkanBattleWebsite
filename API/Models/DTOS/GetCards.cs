@@ -17,9 +17,9 @@ public class GetCardsDTO
             Id = getCardsDto.Id,
             Name = getCardsDto.Name,
             Title = getCardsDto.Title,
-            hp = getCardsDto.Hp,
-            atk = getCardsDto.Atk,
-            def = getCardsDto.Def
+            Hp = getCardsDto.Hp,
+            Atk = getCardsDto.Atk,
+            Def = getCardsDto.Def
         };
     }
 }
