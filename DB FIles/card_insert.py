@@ -1,11 +1,14 @@
 import json
 import psycopg2
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # Database connection
 conn = psycopg2.connect(
     dbname="dokkan",
-    user="postgres",
-    password="Create506",
+    user=os.getenv("NAME"),
+    password=os.getenv("PASSWORD"),
     host="localhost",
     port="5432"
 )
