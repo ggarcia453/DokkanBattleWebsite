@@ -8,6 +8,8 @@ public interface ICardService
     Task<GetCardsDTO?> FindCardID(int cardId);
     Task<IEnumerable<GetCardsDTO>> GetCards();
     Task<IEnumerable<GetCardsDTO>?> FindCardName(string name);
+    Task<IEnumerable<GetCardsDTO>?> FindCardCategory(string category);
+    Task<IEnumerable<GetCardsDTO>?> FindCardLink(string link);
 }
 
 public sealed class CardService : ICardService
@@ -47,6 +49,32 @@ public sealed class CardService : ICardService
     public async Task<IEnumerable<GetCardsDTO>> GetCards()
     {
         List<Card> cards = await _context.Cards.AsNoTracking().ToListAsync();
+        return cards.Select(Card.ToGetCardsDto);
+    }
+
+    public async Task<IEnumerable<GetCardsDTO>?> FindCardCategory(string category)
+    {
+        if (string.IsNullOrWhiteSpace(category))
+            return Enumerable.Empty<GetCardsDTO>();
+        List<Card> cards = await _context.Cards.AsNoTracking()
+            .Include(c => c.CardCategories)!
+            .ThenInclude(cc => cc.Category)
+            .Where(c => c.CardCategories != null && c.CardCategories.Any(cc =>
+                cc.Category!.Name!.ToLower().Contains(category.ToLower())))
+            .ToListAsync();
+        return cards.Select(Card.ToGetCardsDto);
+    }
+
+    public async Task<IEnumerable<GetCardsDTO>?> FindCardLink(string link)
+    {
+        if (string.IsNullOrWhiteSpace(link))
+            return Enumerable.Empty<GetCardsDTO>();
+        List<Card> cards = await _context.Cards.AsNoTracking()
+            .Include(c => c.CardLinks)!
+            .ThenInclude(cl => cl.Link)
+            .Where(c => c.CardLinks != null && c.CardLinks.Any(cc => 
+                cc.Link!.Name!.ToLower().Contains(link.ToLower()))
+                ).ToListAsync();
         return cards.Select(Card.ToGetCardsDto);
     }
 }

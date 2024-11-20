@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 namespace DokkanAPI.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class CardController : ControllerBase
 {
@@ -29,7 +29,7 @@ public class CardController : ControllerBase
         }
     }
 
-    [HttpGet("id={id}")] // Add this attribute
+    [HttpGet("id={id}")]
     public async Task<IActionResult> Get(int id)
     {
         var card = await _cardService.FindCardID(id);
@@ -40,6 +40,20 @@ public class CardController : ControllerBase
     public async Task<IActionResult> Get(string name)
     {
         var cards = await _cardService.FindCardName(name);
+        return Ok(cards);
+    }
+
+    [HttpGet("category={category}")]
+    public async Task<IActionResult> FindCardCategory(string category)
+    {
+        var cards = await _cardService.FindCardCategory(category);
+        return Ok(cards);
+    }
+
+    [HttpGet("link={link}")]
+    public async Task<IActionResult> FindCardLink(string link)
+    {
+        var cards = await _cardService.FindCardLink(link);
         return Ok(cards);
     }
 }

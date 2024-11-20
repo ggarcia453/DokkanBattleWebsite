@@ -15,8 +15,10 @@ namespace DokkanAPI.Models
         public int Hp { get; init; }
         [Column("atk")]
         public int Atk { get; init; }
-        [Column("def")]
-        public int Def { get; init; }
+
+        [Column("def")] public int Def { get; init; }
+        public IEnumerable<CardCategory>? CardCategories { get; set; }
+        public IEnumerable<CardLink>? CardLinks { get; set; }
 
         public static GetCardsDTO ToGetCardsDto(Card card)
         {
@@ -30,6 +32,8 @@ namespace DokkanAPI.Models
                 Def = card.Def
             };
         }
+        
+        
     }
     
 }
