@@ -75,7 +75,7 @@ def get_card(card_number:str)->dict:
         "hp" : stats[0],
         "atk" : stats[1],
         "def" : stats[2],
-        "links" : list(filter(lambda x : x != "Condition:",list(content))),
+        "links" : list(filter(lambda x : str(x) != "Condition:",list(content))),
         "categories": list(categories)
     }
 
