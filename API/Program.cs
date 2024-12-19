@@ -3,6 +3,17 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000") // Ensure no trailing slash
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+
+    });
+});
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 // Add detailed logging
@@ -25,6 +36,7 @@ builder.Services.AddMvc();
 builder.Services.AddRouting();
 
 var app = builder.Build();
+app.UseCors("AllowFrontend");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

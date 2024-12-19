@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using DokkanAPI.Models.DTOS;
 namespace DokkanAPI.Models
 {
-    [Table("Cards")]
+    [Table("cards")]
     public class Card
     {
         [Column("card_id")]

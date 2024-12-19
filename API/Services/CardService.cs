@@ -3,6 +3,14 @@ using DokkanAPI.Models;
 using DokkanAPI.Models.DTOS;
 using Microsoft.EntityFrameworkCore;
 
+
+public class CardSearchParameters
+{
+    public string? Name { get; set; }
+    public string? Category { get; set; }
+    public string? Link { get; set; }
+}
+
 public interface ICardService
 {
     Task<GetCardsDTO?> FindCardID(int cardId);
@@ -10,6 +18,7 @@ public interface ICardService
     Task<IEnumerable<GetCardsDTO>?> FindCardName(string name);
     Task<IEnumerable<GetCardsDTO>?> FindCardCategory(string category);
     Task<IEnumerable<GetCardsDTO>?> FindCardLink(string link);
+    Task<IEnumerable<GetCardsDTO>?> FindCardTitle(string title);
 }
 
 public sealed class CardService : ICardService
@@ -29,9 +38,9 @@ public sealed class CardService : ICardService
 
     public async Task<IEnumerable<GetCardsDTO>?> FindCardName(string name)
     {
-        var searchWords = name.Replace("\"", "")  // Remove quotation marks
-            .Split(' ', StringSplitOptions.RemoveEmptyEntries)  // Split on spaces, ignore empty entries
-            .Select(word => word.ToLower())  // Convert to lower case
+        var searchWords = name.Replace("\"", "") 
+            .Split(' ', StringSplitOptions.RemoveEmptyEntries) 
+            .Select(word => word.ToLower()) 
             .ToArray();
         if (string.IsNullOrWhiteSpace(name))
             return null;
@@ -76,5 +85,14 @@ public sealed class CardService : ICardService
                 cc.Link!.Name!.ToLower().Contains(link.ToLower()))
                 ).ToListAsync();
         return cards.Select(Card.ToGetCardsDto);
+    }
+
+    public async Task<IEnumerable<GetCardsDTO>?> FindCardTitle(string title)
+    {
+        if (string.IsNullOrWhiteSpace(title))
+            return Enumerable.Empty<GetCardsDTO>();
+        List<Card> cards = await _context.Cards.AsNoTracking().ToListAsync();
+        List<Card> filteredCards = cards.Where(card => card.Title != null && card.Title.ToLower().StartsWith(title)).ToList();
+        return filteredCards.Select(Card.ToGetCardsDto);
     }
 }
