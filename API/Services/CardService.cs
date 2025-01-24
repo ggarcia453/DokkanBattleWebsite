@@ -8,7 +8,8 @@ public class CardSearchParameters
 {
     public string? Name { get; set; }
     public string? Category { get; set; }
-    public string? Link { get; set; }
+    public string? Link { get; set; }   
+    public string? Title { get; set; }
 }
 
 public interface ICardService
