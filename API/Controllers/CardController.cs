@@ -1,3 +1,4 @@
+using DokkanAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 namespace DokkanAPI.Controllers;
 
@@ -32,7 +33,7 @@ public class CardController : ControllerBase
     [HttpGet("id={id}")]
     public async Task<IActionResult> Get(int id)
     {
-        var card = await _cardService.FindCardID(id);
+        var card = await _cardService.FindCardId(id);
         return Ok(card);
     }
 

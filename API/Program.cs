@@ -1,4 +1,5 @@
 using DokkanAPI.Data;
+using DokkanAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

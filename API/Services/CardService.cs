@@ -3,18 +3,11 @@ using DokkanAPI.Models;
 using DokkanAPI.Models.DTOS;
 using Microsoft.EntityFrameworkCore;
 
-
-public class CardSearchParameters
-{
-    public string? Name { get; set; }
-    public string? Category { get; set; }
-    public string? Link { get; set; }   
-    public string? Title { get; set; }
-}
+namespace DokkanAPI.Services;
 
 public interface ICardService
 {
-    Task<GetCardsDTO?> FindCardID(int cardId);
+    Task<GetCardsDTO?> FindCardId(int cardId);
     Task<IEnumerable<GetCardsDTO>> GetCards();
     Task<IEnumerable<GetCardsDTO>?> FindCardName(string name);
     Task<IEnumerable<GetCardsDTO>?> FindCardCategory(string category);
@@ -31,7 +24,7 @@ public sealed class CardService : ICardService
         _context = context;
     }
     
-    public async Task<GetCardsDTO?> FindCardID(int cardId)
+    public async Task<GetCardsDTO?> FindCardId(int cardId)
     {
         var card = await _context.Cards.FindAsync(cardId);
         return card == null ? null : Card.ToGetCardsDto(card);
@@ -84,7 +77,7 @@ public sealed class CardService : ICardService
             .ThenInclude(cl => cl.Link)
             .Where(c => c.CardLinks != null && c.CardLinks.Any(cc => 
                 cc.Link!.Name!.ToLower().Contains(link.ToLower()))
-                ).ToListAsync();
+            ).ToListAsync();
         return cards.Select(Card.ToGetCardsDto);
     }
 
