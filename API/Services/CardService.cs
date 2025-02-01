@@ -13,6 +13,10 @@ public interface ICardService
     Task<IEnumerable<GetCardsDTO>?> FindCardCategory(string category);
     Task<IEnumerable<GetCardsDTO>?> FindCardLink(string link);
     Task<IEnumerable<GetCardsDTO>?> FindCardTitle(string title);
+    
+    Task<IEnumerable<GetCardsDTO>?> FindCardHpG(int hp);
+    
+    Task<IEnumerable<GetCardsDTO>?> FindCardHpL(int hp);
 }
 
 public sealed class CardService : ICardService
@@ -87,6 +91,20 @@ public sealed class CardService : ICardService
             return Enumerable.Empty<GetCardsDTO>();
         List<Card> cards = await _context.Cards.AsNoTracking().ToListAsync();
         List<Card> filteredCards = cards.Where(card => card.Title != null && card.Title.ToLower().StartsWith(title)).ToList();
+        return filteredCards.Select(Card.ToGetCardsDto);
+    }
+
+    public async Task<IEnumerable<GetCardsDTO>?> FindCardHpG(int hp)
+    {
+        List<Card> cards = await _context.Cards.AsNoTracking().ToListAsync();
+        List<Card> filteredCards = cards.Where(card => card.Hp >= hp).ToList();
+        return filteredCards.Select(Card.ToGetCardsDto);
+    }
+    
+    public async Task<IEnumerable<GetCardsDTO>?> FindCardHpL(int hp)
+    {
+        List<Card> cards = await _context.Cards.AsNoTracking().ToListAsync();
+        List<Card> filteredCards = cards.Where(card => card.Hp <= hp).ToList();
         return filteredCards.Select(Card.ToGetCardsDto);
     }
 }

@@ -16,7 +16,8 @@ namespace DokkanAPI.Models
         [Column("atk")]
         public int Atk { get; init; }
 
-        [Column("def")] public int Def { get; init; }
+        [Column("def")] 
+        public int Def { get; init; }
         public IEnumerable<CardCategory>? CardCategories { get; set; }
         public IEnumerable<CardLink>? CardLinks { get; set; }
 

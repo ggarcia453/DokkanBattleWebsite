@@ -1,5 +1,6 @@
 .idea/
 
-Scrapers/*output.*
+*output.*
 *.sln
 DB Files/.env
+deno.lock

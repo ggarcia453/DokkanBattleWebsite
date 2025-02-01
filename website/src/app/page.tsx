@@ -1,8 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Character } from "./types/character";
-import { Select } from "@mui/material";
-
 
 async function fetchData(mode: string, query: string){
   try {
@@ -29,7 +27,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState("name");
 
-
+  //Fetch data from api
   useEffect(() => {
     const loadInitialData = async () => {
       try {
@@ -47,6 +45,7 @@ export default function Home() {
     loadInitialData();
   }, []);
 
+  //Search data from the api
   const handleSearch = async () => {
     setIsLoading(true);
     setError(null);

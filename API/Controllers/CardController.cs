@@ -64,4 +64,18 @@ public class CardController : ControllerBase
         var cards = await _cardService.FindCardTitle(title);
         return Ok(cards);
     }
+
+    [HttpGet("hp>={hp}")]
+    public async Task<IActionResult> FindCardHpG(int hp)
+    {
+        var cards = await _cardService.FindCardHpG(hp);
+        return Ok(cards);
+    }
+    
+    [HttpGet("hp<={hp}")]
+    public async Task<IActionResult> FindCardHpL(int hp)
+    {
+        var cards = await _cardService.FindCardHpL(hp);
+        return Ok(cards);
+    }
 }
