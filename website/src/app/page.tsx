@@ -26,6 +26,11 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState("name");
+  //Update team Health
+  const [health, changeHealth] = useState(0);
+  useEffect(() =>{
+    changeHealth(team.reduce((s, card) =>s + card.hp, 0));
+  }, [team]);
 
   //Fetch data from api
   useEffect(() => {
@@ -176,7 +181,10 @@ export default function Home() {
         
       )}
       <div className="flex-1">
+        <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold mb-2">Current Team</h2>
+            <p>Total Team Health: {health}</p>
+          </div>
             <div className="overflow-auto">
               <table className="w-full border-collapse border">
                 <thead>
@@ -190,8 +198,9 @@ export default function Home() {
                   </tr>
                 </thead>
                 <tbody>
-                  {team.map((card) => (
-                    <tr key={card.id}>
+                  {team.map((card, index) => (
+                    <tr key={card.id}
+                    className={index == 0 ? "bg-yellow-400" : ""}>
                       <td className="border p-2">{card.title}</td>
                       <td className="border p-2">{card.name}</td>
                       <td className="border p-2">{card.hp}</td>
