@@ -6,4 +6,4 @@ The main motivation for making this website is making a team builder.
 
 # Future Plans
 1. Grabbing specific cards 
-2. Searching for cards meating certain conditions
+2. Searching for cards meeting certain conditions
