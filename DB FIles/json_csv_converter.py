@@ -11,4 +11,4 @@ if __name__ == "__main__":
     df['atk'] = df['atk'].astype(int)
     df['def'] = df['def'].str.replace(',', '')
     df['def'] = df['def'].astype(int)
-    df.to_csv('output.csv')
+    df.to_csv('card_output.csv', index=False)

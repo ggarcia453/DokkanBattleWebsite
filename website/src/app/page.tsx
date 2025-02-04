@@ -26,6 +26,39 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState("name");
+  //Sorting config
+  const [sortConfig, setSortConfig] = useState({
+    key: 'id',
+    direction: 'ascending'
+  });
+  const handleSort = (key: keyof Character) => {
+    let direction: 'ascending' | 'descending' = 'descending';
+    
+    if (sortConfig.key === key) {
+      direction = sortConfig.direction === 'ascending' ? 'descending' : 'ascending';
+    }
+    setSortConfig({ key, direction });
+
+    const sortCharacters = (characters: Character[]) => {
+      return [...characters].sort((a, b) => {
+        if (typeof a[key] === 'string' && typeof b[key] === 'string') {
+          // String sorting
+          return direction === 'ascending'
+            ? (a[key] as string).localeCompare(b[key] as string)
+            : (b[key] as string).localeCompare(a[key] as string);
+        } else if (typeof a[key] === 'number' && typeof b[key] === 'number') {
+          // Number sorting
+          return direction === 'ascending'
+            ? (a[key] as number) - (b[key] as number)
+            : (b[key] as number) - (a[key] as number);
+        }
+        return 0;
+      });
+    };
+    const sortedCards = sortCharacters(cards);
+    setCards(sortedCards);
+  };
+
   //Update team Health
   const [health, changeHealth] = useState(0);
   useEffect(() =>{
@@ -37,7 +70,7 @@ export default function Home() {
     const loadInitialData = async () => {
       try {
         const results = await fetchData("", "");
-        const sortedResults = [...results].sort((a, b) => a.id - b.id);
+        const sortedResults = [...results].sort((a, b) => a.id + b.id);
         console.log(sortedResults);
         setCards(sortedResults);
       } catch (err) {
@@ -59,7 +92,7 @@ export default function Home() {
       const results: Character[] = await fetchData(selectedOption, data);
       const availableResults = results
       .filter(card => !team.some(teamCard => teamCard.id === card.id))
-      .sort((a, b) => a.id - b.id);
+      .sort((a, b) => a.id +b.id);
       setCards(availableResults);
     } catch (err) {
       setError("Failed to fetch characters. Please try again.");
@@ -89,7 +122,7 @@ export default function Home() {
     const shouldAddBack = !data || 
       removedCard.name.toLowerCase().includes(data.toLowerCase()); 
     if (shouldAddBack) {
-      const newCards = [...cards, removedCard].sort((a, b) => a.id - b.id);
+      const newCards = [...cards, removedCard].sort((a, b) => a.id + b.id);
       setCards(newCards);
     }
   };
@@ -141,11 +174,46 @@ export default function Home() {
               <table className="w-full border-collapse border">
                 <thead>
                   <tr className="bg-gray-100">
-                    <th className="border p-2">Title</th>
-                    <th className="border p-2">Name</th>
-                    <th className="border p-2">HP</th>
-                    <th className="border p-2">ATK</th>
-                    <th className="border p-2">DEF</th>
+                  <th 
+                    className="border p-2 cursor-pointer hover:bg-gray-200"
+                    onClick={() => handleSort('title')}
+                  >
+                    Title 
+                    {sortConfig.key === 'title' && 
+                      (sortConfig.direction === 'ascending' ? ' ▲' : ' ▼')}
+                  </th>
+                  <th 
+                    className="border p-2 cursor-pointer hover:bg-gray-200"
+                    onClick={() => handleSort('name')}
+                  >
+                    Name
+                    {sortConfig.key === 'name' && 
+                      (sortConfig.direction === 'ascending' ? ' ▲' : ' ▼')}
+                  </th>
+                  <th 
+                    className="border p-2 cursor-pointer hover:bg-gray-200"
+                    onClick={() => handleSort('hp')}
+                  >
+                    HP
+                    {sortConfig.key === 'hp' && 
+                      (sortConfig.direction === 'ascending' ? ' ▲' : ' ▼')}
+                  </th>
+                  <th 
+                    className="border p-2 cursor-pointer hover:bg-gray-200"
+                    onClick={() => handleSort('atk')}
+                  >
+                    ATK
+                    {sortConfig.key === 'atk' && 
+                      (sortConfig.direction === 'ascending' ? ' ▲' : ' ▼')}
+                  </th>
+                  <th 
+                    className="border p-2 cursor-pointer hover:bg-gray-200"
+                    onClick={() => handleSort('def')}
+                  >
+                    DEF
+                    {sortConfig.key === 'def' && 
+                      (sortConfig.direction === 'ascending' ? ' ▲' : ' ▼')}
+                  </th>
                     <th className="border p-2">Action</th>
                   </tr>
                 </thead>
