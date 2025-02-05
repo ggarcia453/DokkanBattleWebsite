@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Character } from "./types/character";
+import {get_synergy_score} from "./functions/charmethods";
 
 async function fetchData(mode: string, query: string){
   try {
@@ -26,6 +27,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState("name");
+  const [synergy, set_synergy] = useState(0);
   //Sorting config
   const [sortConfig, setSortConfig] = useState({
     key: 'id',
@@ -92,7 +94,6 @@ export default function Home() {
       const results: Character[] = await fetchData(selectedOption, data);
       const availableResults = results
       .filter(card => !team.some(teamCard => teamCard.id === card.id))
-      .sort((a, b) => a.id +b.id);
       setCards(availableResults);
     } catch (err) {
       setError("Failed to fetch characters. Please try again.");
@@ -101,6 +102,10 @@ export default function Home() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    set_synergy(get_synergy_score(team));
+  }, [team])
 
   const handleAddToTeam = (card: Character) => {
     if (team.length >= 6) {
@@ -122,7 +127,7 @@ export default function Home() {
     const shouldAddBack = !data || 
       removedCard.name.toLowerCase().includes(data.toLowerCase()); 
     if (shouldAddBack) {
-      const newCards = [...cards, removedCard].sort((a, b) => a.id + b.id);
+      const newCards = [...cards, removedCard];
       setCards(newCards);
     }
   };
@@ -293,6 +298,7 @@ export default function Home() {
                   )}
                 </tbody>
               </table>
+              <p className="text-right">Team Synergy: {synergy}</p>
             </div>
           </div>
           </div>
