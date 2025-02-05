@@ -30,7 +30,9 @@ namespace DokkanAPI.Models
                 Title = card.Title,
                 Hp = card.Hp,
                 Atk = card.Atk,
-                Def = card.Def
+                Def = card.Def,
+                Categories = card.CardCategories?.Select(cc => cc.Category!.Name),
+                Links = card.CardLinks?.Select(cc => cc.Link!.Name),
             };
         }
         

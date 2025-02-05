@@ -30,7 +30,12 @@ public sealed class CardService : ICardService
     
     public async Task<GetCardsDTO?> FindCardId(int cardId)
     {
-        var card = await _context.Cards.FindAsync(cardId);
+        var card = await _context.Cards.AsSplitQuery()
+            .Include(c => c.CardCategories)!
+            .ThenInclude(cc => cc.Category)
+            .Include(c => c.CardLinks)!
+            .ThenInclude(cl => cl.Link)
+            .FirstOrDefaultAsync(c => c.Id == cardId);
         return card == null ? null : Card.ToGetCardsDto(card);
     }
 
@@ -42,7 +47,11 @@ public sealed class CardService : ICardService
             .ToArray();
         if (string.IsNullOrWhiteSpace(name))
             return null;
-        var cards = await _context.Cards
+        var cards = await _context.Cards.AsSplitQuery()
+            .Include(c => c.CardCategories)!
+            .ThenInclude(cc => cc.Category)
+            .Include(c => c.CardLinks)!
+            .ThenInclude(cl => cl.Link)
             .AsNoTracking()
             .ToListAsync();
         
@@ -55,7 +64,11 @@ public sealed class CardService : ICardService
 
     public async Task<IEnumerable<GetCardsDTO>> GetCards()
     {
-        List<Card> cards = await _context.Cards.AsNoTracking().ToListAsync();
+        List<Card> cards = await _context.Cards.AsSplitQuery()
+            .Include(c => c.CardCategories)!
+            .ThenInclude(cc => cc.Category)
+            .Include(c => c.CardLinks)!
+            .ThenInclude(cl => cl.Link).AsNoTracking().ToListAsync();
         return cards.Select(Card.ToGetCardsDto);
     }
 
@@ -68,6 +81,8 @@ public sealed class CardService : ICardService
             .ThenInclude(cc => cc.Category)
             .Where(c => c.CardCategories != null && c.CardCategories.Any(cc =>
                 cc.Category!.Name!.ToLower().Contains(category.ToLower())))
+            .Include(c => c.CardLinks)!
+            .ThenInclude(cl => cl.Link)
             .ToListAsync();
         return cards.Select(Card.ToGetCardsDto);
     }
@@ -80,8 +95,10 @@ public sealed class CardService : ICardService
             .Include(c => c.CardLinks)!
             .ThenInclude(cl => cl.Link)
             .Where(c => c.CardLinks != null && c.CardLinks.Any(cc => 
-                cc.Link!.Name!.ToLower().Contains(link.ToLower()))
-            ).ToListAsync();
+                cc.Link!.Name!.ToLower().Contains(link.ToLower())))
+            .Include(c => c.CardCategories)!
+            .ThenInclude(cc => cc.Category)
+            .ToListAsync();
         return cards.Select(Card.ToGetCardsDto);
     }
 
@@ -89,21 +106,33 @@ public sealed class CardService : ICardService
     {
         if (string.IsNullOrWhiteSpace(title))
             return Enumerable.Empty<GetCardsDTO>();
-        List<Card> cards = await _context.Cards.AsNoTracking().ToListAsync();
+        List<Card> cards = await _context.Cards.AsSplitQuery()
+            .Include(c => c.CardCategories)!
+            .ThenInclude(cc => cc.Category)
+            .Include(c => c.CardLinks)!
+            .ThenInclude(cl => cl.Link).AsNoTracking().ToListAsync();
         List<Card> filteredCards = cards.Where(card => card.Title != null && card.Title.ToLower().StartsWith(title)).ToList();
         return filteredCards.Select(Card.ToGetCardsDto);
     }
 
     public async Task<IEnumerable<GetCardsDTO>?> FindCardHpG(int hp)
     {
-        List<Card> cards = await _context.Cards.AsNoTracking().ToListAsync();
+        List<Card> cards = await _context.Cards.AsSplitQuery()
+            .Include(c => c.CardCategories)!
+            .ThenInclude(cc => cc.Category)
+            .Include(c => c.CardLinks)!
+            .ThenInclude(cl => cl.Link).AsNoTracking().ToListAsync();
         List<Card> filteredCards = cards.Where(card => card.Hp >= hp).ToList();
         return filteredCards.Select(Card.ToGetCardsDto);
     }
     
     public async Task<IEnumerable<GetCardsDTO>?> FindCardHpL(int hp)
     {
-        List<Card> cards = await _context.Cards.AsNoTracking().ToListAsync();
+        List<Card> cards = await _context.Cards.AsSplitQuery()
+            .Include(c => c.CardCategories)!
+            .ThenInclude(cc => cc.Category)
+            .Include(c => c.CardLinks)!
+            .ThenInclude(cl => cl.Link).AsNoTracking().ToListAsync();
         List<Card> filteredCards = cards.Where(card => card.Hp <= hp).ToList();
         return filteredCards.Select(Card.ToGetCardsDto);
     }

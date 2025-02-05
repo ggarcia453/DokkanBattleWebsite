@@ -5,5 +5,7 @@ export interface Character {
     hp: number;
     atk: number;
     def: number;
+    categories: string[],
+    links: string[],
 }
 

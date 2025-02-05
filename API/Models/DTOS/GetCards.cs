@@ -9,6 +9,8 @@ public class GetCardsDTO
     public int Hp { get; init; }
     public int Atk { get; init; }
     public int Def { get; init; }
+    public IEnumerable<string?>? Categories { get; set; }
+    public IEnumerable<string?>? Links { get; set; } 
 
     public static Card ToCard(GetCardsDTO getCardsDto)
     {
