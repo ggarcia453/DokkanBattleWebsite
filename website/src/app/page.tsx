@@ -34,12 +34,18 @@ export default function Home() {
     direction: 'ascending'
   });
   const handleSort = (key: keyof Character) => {
-    let direction: 'ascending' | 'descending' = 'descending';
+    let direction: 'ascending' | 'descending' = 'ascending';
+    let newkey = key;
     
     if (sortConfig.key === key) {
-      direction = sortConfig.direction === 'ascending' ? 'descending' : 'ascending';
+      if (sortConfig.direction === 'ascending') {
+        direction = 'descending';
+      } else {
+        direction = 'ascending';
+        newkey = 'id';
+      }
     }
-    setSortConfig({ key, direction });
+    setSortConfig({ key: newkey, direction });
 
     const sortCharacters = (characters: Character[]) => {
       return [...characters].sort((a, b) => {
@@ -94,6 +100,19 @@ export default function Home() {
       const results: Character[] = await fetchData(selectedOption, data);
       const availableResults = results
       .filter(card => !team.some(teamCard => teamCard.id === card.id))
+      .sort((a, b) => {
+        const key = sortConfig.key as keyof Character;
+        if (typeof a[key] === 'string' && typeof b[key] === 'string') {
+          return sortConfig.direction === 'ascending'
+            ? (a[key] as string).localeCompare(b[key] as string)
+            : (b[key] as string).localeCompare(a[key] as string);
+        } else if (typeof a[key] === 'number' && typeof b[key] === 'number') {
+          return sortConfig.direction === 'ascending'
+            ? (a[key] as number) - (b[key] as number)
+            : (b[key] as number) - (a[key] as number);
+        }
+        return 0;
+      });
       setCards(availableResults);
     } catch (err) {
       setError("Failed to fetch characters. Please try again.");
@@ -128,7 +147,21 @@ export default function Home() {
       removedCard.name.toLowerCase().includes(data.toLowerCase()); 
     if (shouldAddBack) {
       const newCards = [...cards, removedCard];
-      setCards(newCards);
+      const sortedCards = newCards.sort((a, b) => {
+        const key = sortConfig.key as keyof Character;
+        
+        if (typeof a[key] === 'string' && typeof b[key] === 'string') {
+          return sortConfig.direction === 'ascending'
+            ? (a[key] as string).localeCompare(b[key] as string)
+            : (b[key] as string).localeCompare(a[key] as string);
+        } else if (typeof a[key] === 'number' && typeof b[key] === 'number') {
+          return sortConfig.direction === 'ascending'
+            ? (a[key] as number) - (b[key] as number)
+            : (b[key] as number) - (a[key] as number);
+        }
+        return 0;
+      });
+      setCards(sortedCards);
     }
   };
 
