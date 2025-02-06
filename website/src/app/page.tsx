@@ -2,22 +2,7 @@
 import { useState, useEffect } from "react";
 import { Character } from "./types/character";
 import {get_synergy_score} from "./functions/charmethods";
-
-async function fetchData(mode: string, query: string){
-  try {
-    const urltofetch = (query === "" || mode == "")
-      ? `http://localhost:5175/card/` 
-      : `http://localhost:5175/card/${mode}=${query}`;
-    const res = await fetch(urltofetch);
-    if (!res.ok) {
-      throw new Error(`HTTP error! Status: ${res.status}`);
-    }
-    const json = await res.json();
-    return json;
-  } catch (err) {
-    console.error('Fetch error:', err);
-  }
-}
+import { fetchData } from "./functions/apicall";
 
 
 export default function Home() {
@@ -35,17 +20,11 @@ export default function Home() {
   });
   const handleSort = (key: keyof Character) => {
     let direction: 'ascending' | 'descending' = 'ascending';
-    let newkey = key;
     
     if (sortConfig.key === key) {
-      if (sortConfig.direction === 'ascending') {
-        direction = 'descending';
-      } else {
-        direction = 'ascending';
-        newkey = 'id';
-      }
+      direction = sortConfig.direction === 'ascending' ? 'descending' : 'ascending';
     }
-    setSortConfig({ key: newkey, direction });
+    setSortConfig({ key, direction });
 
     const sortCharacters = (characters: Character[]) => {
       return [...characters].sort((a, b) => {
@@ -73,11 +52,11 @@ export default function Home() {
     changeHealth(team.reduce((s, card) =>s + card.hp, 0));
   }, [team]);
 
-  //Fetch data from api
+  //Default Search from api (No FIlters)
   useEffect(() => {
     const loadInitialData = async () => {
       try {
-        const results = await fetchData("", "");
+        const results = await fetchData("card", "", "");
         const sortedResults = [...results].sort((a, b) => a.id + b.id);
         console.log(sortedResults);
         setCards(sortedResults);
@@ -91,13 +70,13 @@ export default function Home() {
     loadInitialData();
   }, []);
 
-  //Search data from the api
+  //Search with some parameters data from the api
   const handleSearch = async () => {
     setIsLoading(true);
     setError(null);
     
     try {
-      const results: Character[] = await fetchData(selectedOption, data);
+      const results: Character[] = await fetchData("card", selectedOption, data);
       const availableResults = results
       .filter(card => !team.some(teamCard => teamCard.id === card.id))
       .sort((a, b) => {
