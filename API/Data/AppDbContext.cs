@@ -14,6 +14,8 @@ namespace DokkanAPI.Data
         public DbSet<Card> Cards { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<CardCategory> CardCategories { get; set; } 
+        public DbSet<Link> Links { get; set; }
+        public DbSet<CardLink> CardLinks { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Card>()

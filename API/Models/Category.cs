@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using DokkanAPI.Models.DTOS;
 
 namespace DokkanAPI.Models
 {
-    [Table("Categories")]
+    [Table("categories")]
     public class Category
     {
         [Column("category_id")]
@@ -11,5 +12,14 @@ namespace DokkanAPI.Models
         [Column("category_name")]
         public string? Name { get; set; }
         public IEnumerable<CardCategory>? CategoryCards { get; set; }
+
+        public static GetCategoryDto ToCategoryDto(Category category)
+        {
+            return new GetCategoryDto
+            {
+                Id = category.Id,
+                Name = category.Name
+            };
+        }
     }
 }

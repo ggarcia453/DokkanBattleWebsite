@@ -21,9 +21,9 @@ namespace DokkanAPI.Models
         public IEnumerable<CardCategory>? CardCategories { get; set; }
         public IEnumerable<CardLink>? CardLinks { get; set; }
 
-        public static GetCardsDTO ToGetCardsDto(Card card)
+        public static GetCardsDto ToGetCardsDto(Card card)
         {
-            return new GetCardsDTO
+            return new GetCardsDto
             {
                 Id = card.Id,
                 Name = card.Name,

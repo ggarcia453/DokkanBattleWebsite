@@ -33,6 +33,7 @@ builder.Services.AddAuthorization();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(op => op.UseNpgsql(connectionString));
 builder.Services.AddTransient<ICardService, CardService>();
+builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddMvc();
 builder.Services.AddRouting();
 

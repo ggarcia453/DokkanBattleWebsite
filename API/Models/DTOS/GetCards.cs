@@ -1,7 +1,6 @@
-using System.ComponentModel.DataAnnotations;
 namespace DokkanAPI.Models.DTOS;
 
-public class GetCardsDTO
+public class GetCardsDto
 {
     public int Id { get; set; }
     public string? Name { get; set; }
@@ -12,7 +11,7 @@ public class GetCardsDTO
     public IEnumerable<string?>? Categories { get; set; }
     public IEnumerable<string?>? Links { get; set; } 
 
-    public static Card ToCard(GetCardsDTO getCardsDto)
+    public static Card ToCard(GetCardsDto getCardsDto)
     {
         return new Card
         {

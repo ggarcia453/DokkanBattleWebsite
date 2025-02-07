@@ -7,16 +7,16 @@ namespace DokkanAPI.Services;
 
 public interface ICardService
 {
-    Task<GetCardsDTO?> FindCardId(int cardId);
-    Task<IEnumerable<GetCardsDTO>> GetCards();
-    Task<IEnumerable<GetCardsDTO>?> FindCardName(string name);
-    Task<IEnumerable<GetCardsDTO>?> FindCardCategory(string category);
-    Task<IEnumerable<GetCardsDTO>?> FindCardLink(string link);
-    Task<IEnumerable<GetCardsDTO>?> FindCardTitle(string title);
+    Task<GetCardsDto?> FindCardId(int cardId);
+    Task<IEnumerable<GetCardsDto>> GetCards();
+    Task<IEnumerable<GetCardsDto>?> FindCardName(string name);
+    Task<IEnumerable<GetCardsDto>?> FindCardCategory(string category);
+    Task<IEnumerable<GetCardsDto>?> FindCardLink(string link);
+    Task<IEnumerable<GetCardsDto>?> FindCardTitle(string title);
     
-    Task<IEnumerable<GetCardsDTO>?> FindCardHpG(int hp);
+    Task<IEnumerable<GetCardsDto>?> FindCardHpG(int hp);
     
-    Task<IEnumerable<GetCardsDTO>?> FindCardHpL(int hp);
+    Task<IEnumerable<GetCardsDto>?> FindCardHpL(int hp);
 }
 
 public sealed class CardService : ICardService
@@ -28,7 +28,7 @@ public sealed class CardService : ICardService
         _context = context;
     }
     
-    public async Task<GetCardsDTO?> FindCardId(int cardId)
+    public async Task<GetCardsDto?> FindCardId(int cardId)
     {
         var card = await _context.Cards.AsSplitQuery()
             .Include(c => c.CardCategories)!
@@ -39,7 +39,7 @@ public sealed class CardService : ICardService
         return card == null ? null : Card.ToGetCardsDto(card);
     }
 
-    public async Task<IEnumerable<GetCardsDTO>?> FindCardName(string name)
+    public async Task<IEnumerable<GetCardsDto>?> FindCardName(string name)
     {
         var searchWords = name.Replace("\"", "") 
             .Split(' ', StringSplitOptions.RemoveEmptyEntries) 
@@ -62,7 +62,7 @@ public sealed class CardService : ICardService
         return filteredCards;
     }
 
-    public async Task<IEnumerable<GetCardsDTO>> GetCards()
+    public async Task<IEnumerable<GetCardsDto>> GetCards()
     {
         List<Card> cards = await _context.Cards.AsSplitQuery()
             .Include(c => c.CardCategories)!
@@ -72,10 +72,10 @@ public sealed class CardService : ICardService
         return cards.Select(Card.ToGetCardsDto);
     }
 
-    public async Task<IEnumerable<GetCardsDTO>?> FindCardCategory(string category)
+    public async Task<IEnumerable<GetCardsDto>?> FindCardCategory(string category)
     {
         if (string.IsNullOrWhiteSpace(category))
-            return Enumerable.Empty<GetCardsDTO>();
+            return Enumerable.Empty<GetCardsDto>();
         List<Card> cards = await _context.Cards.AsNoTracking()
             .Include(c => c.CardCategories)!
             .ThenInclude(cc => cc.Category)
@@ -87,10 +87,10 @@ public sealed class CardService : ICardService
         return cards.Select(Card.ToGetCardsDto);
     }
 
-    public async Task<IEnumerable<GetCardsDTO>?> FindCardLink(string link)
+    public async Task<IEnumerable<GetCardsDto>?> FindCardLink(string link)
     {
         if (string.IsNullOrWhiteSpace(link))
-            return Enumerable.Empty<GetCardsDTO>();
+            return Enumerable.Empty<GetCardsDto>();
         List<Card> cards = await _context.Cards.AsNoTracking()
             .Include(c => c.CardLinks)!
             .ThenInclude(cl => cl.Link)
@@ -102,10 +102,10 @@ public sealed class CardService : ICardService
         return cards.Select(Card.ToGetCardsDto);
     }
 
-    public async Task<IEnumerable<GetCardsDTO>?> FindCardTitle(string title)
+    public async Task<IEnumerable<GetCardsDto>?> FindCardTitle(string title)
     {
         if (string.IsNullOrWhiteSpace(title))
-            return Enumerable.Empty<GetCardsDTO>();
+            return Enumerable.Empty<GetCardsDto>();
         List<Card> cards = await _context.Cards.AsSplitQuery()
             .Include(c => c.CardCategories)!
             .ThenInclude(cc => cc.Category)
@@ -115,7 +115,7 @@ public sealed class CardService : ICardService
         return filteredCards.Select(Card.ToGetCardsDto);
     }
 
-    public async Task<IEnumerable<GetCardsDTO>?> FindCardHpG(int hp)
+    public async Task<IEnumerable<GetCardsDto>?> FindCardHpG(int hp)
     {
         List<Card> cards = await _context.Cards.AsSplitQuery()
             .Include(c => c.CardCategories)!
@@ -126,7 +126,7 @@ public sealed class CardService : ICardService
         return filteredCards.Select(Card.ToGetCardsDto);
     }
     
-    public async Task<IEnumerable<GetCardsDTO>?> FindCardHpL(int hp)
+    public async Task<IEnumerable<GetCardsDto>?> FindCardHpL(int hp)
     {
         List<Card> cards = await _context.Cards.AsSplitQuery()
             .Include(c => c.CardCategories)!
