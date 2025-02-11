@@ -29,4 +29,18 @@ public class CategoryController : ControllerBase
             return StatusCode(500);
         }
     }
+
+    [HttpGet("id={id}")]
+    public async Task<IActionResult> Get(int id)
+    {
+        var cat = await _categoryService.FindCategoryId(id);
+        return Ok(cat);
+    }
+
+    [HttpGet("name={name}")]
+    public async Task<IActionResult> Get(string name)
+    {
+        var cats = await _categoryService.FindCategoryName(name);
+        return Ok(cats);
+    }
 }
