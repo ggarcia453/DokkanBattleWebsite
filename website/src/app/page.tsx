@@ -163,13 +163,12 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Dokkan Search</h1>
       <div>
-      <input type="text" value={data}  onChange={handleChange} onKeyDown={handleKeyDown} placeholder="Search Here" />
+      <input className="px-4 py-1" type="text" value={data}  onChange={handleChange} onKeyDown={handleKeyDown} placeholder="Search Here" />
       <select
         value={selectedOption}
         onChange={handleDropdownChange}
-        className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+        className="border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
       >
         <option value="" disabled>
           Select an option

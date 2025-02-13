@@ -41,7 +41,7 @@ public class CategoryService : ICategoryService
         return categories.Where(c =>
         {
             Debug.Assert(c.Name != null, "c.Name != null");
-            return c.Name.StartsWith(name);
+            return c.Name.StartsWith(name, StringComparison.OrdinalIgnoreCase);
         }).Select(Category.ToCategoryDto);
     }
 }
