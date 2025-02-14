@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { fetchData } from "../functions/apicall";
 import { Category } from '../types/category';
+
 const searchCat = async (mode: string = "", query: string = "") => {
   return await fetchData("category", mode, query);
 }
@@ -9,7 +10,6 @@ const searchCat = async (mode: string = "", query: string = "") => {
 const FinderPage = () => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [catsearch, setCatSearch] = useState("");
-    const [queryCat, setqueryCat] = useState<Category[]>([]);
     useEffect(() => {
         const loadInitialData = async () => {
           try {
@@ -21,6 +21,11 @@ const FinderPage = () => {
     
         loadInitialData();
       }, []);
+
+    const addtoCatToQuery = (cat: Category) => {
+      
+      console.log(cat);
+    };
     
     const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
       setCatSearch(event.target.value)
@@ -33,27 +38,30 @@ const FinderPage = () => {
         setCategories(await searchCat("name", catsearch));
       }
     };
-    return <main>
+    return (
+    <main>
       <div className='float-left'>
-        <div>
         <input type="text" placeholder='Search Categories' value={catsearch} onKeyDown={handleKeyDown} onChange={handleChange}/>
-        <table className="border-collapse border">
-          <thead>
-            <tr>
-              <th>Name</th>
-            </tr>
-          </thead>
-          <tbody>
-            {categories.map((cat) => (
-              <tr key={cat.id}>
-                <td className="border text-center p-2">{cat.name}</td>
+        <div className="flex items-start gap-4 mt-2">
+          <table className="border-collapse border">
+            <thead>
+              <tr>
+                <th>Name</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        
+            </thead>
+            <tbody>
+              {categories.map((cat) => (
+                <tr key={cat.id} onClick={() => addtoCatToQuery(cat)}>
+                  <td className="border text-center p-2">{cat.name}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button className="border px-4 py-2" onClick={() =>{} }>
+            Reset Query 
+          </button>
         </div>
-        </div>
-    </main>
+      </div>
+    </main>)
 }
 export default FinderPage;
