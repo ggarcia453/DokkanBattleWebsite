@@ -1,4 +1,4 @@
-export interface Category{
-    id : number, 
-    name: string
+export class Category{
+    id : number = -1
+    name: string = ""
 }

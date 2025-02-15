@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { fetchData } from "../functions/apicall";
 import { Category } from '../types/category';
+import { Query, operations } from '../types/conditions';
 
 const searchCat = async (mode: string = "", query: string = "") => {
   return await fetchData("category", mode, query);
@@ -57,9 +58,19 @@ const FinderPage = () => {
               ))}
             </tbody>
           </table>
-          <button className="border px-4 py-2" onClick={() =>{} }>
-            Reset Query 
-          </button>
+          <div className="flex flex-col space-y-4">
+            <button className="border px-4 py-2" onClick={() => {}}>
+              Reset Query
+            </button>
+            <div className="flex space-x-4">
+              <button className="border px-4 py-2">AND</button>
+              <button className="border px-4 py-2">OR</button>
+            </div>
+            <div className="flex space-x-4">
+              <button className="border px-7 py-2">(</button>
+              <button className="border px-7 py-2">)</button>
+            </div>
+          </div>
         </div>
       </div>
     </main>)

@@ -1,7 +1,7 @@
 import { Category } from "./category";
 
 enum operations{
-    And, Or
+    AND, OR
 }
 
 class Query{
@@ -9,3 +9,5 @@ class Query{
     public left : Query | Category | null = null;
     public right : Query | Category | null = null;
 }
+
+export {Query, operations};
