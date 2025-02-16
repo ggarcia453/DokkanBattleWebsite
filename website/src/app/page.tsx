@@ -262,7 +262,6 @@ export default function Home() {
               </table>
             </div>
           </div>
-        
       )}
       <div className="flex-1">
         <div className="flex justify-between items-center mb-4">
