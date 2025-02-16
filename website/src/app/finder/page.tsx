@@ -73,10 +73,12 @@ const FinderPage = () => {
             </button>
             <div className="flex space-x-4">
               <button className="border px-4 py-2"onClick={() => {
+                if (addcat)
                 setqstring(qstring + " & ");
                 setaddCat(true);
               }}>AND</button>
               <button className="border px-4 py-2" onClick={() => {
+                if (addcat) return;
                 setqstring(qstring + " || ");
                 setaddCat(true);
               }}>OR</button>
