@@ -10,6 +10,7 @@ const searchCat = async (mode: string = "", query: string = "") => {
 }
 
 const FinderPage = () => {
+    const [loading, setLoading] = useState(true);
     const [categories, setCategories] = useState<Category[]>([]);
     const [res, setRes] = useState<Character[]>([]);
     const [catsearch, setCatSearch] = useState("");
@@ -18,9 +19,13 @@ const FinderPage = () => {
     useEffect(() => {
         const loadInitialData = async () => {
           try {
-            setCategories(await searchCat());
+            setLoading(true);
+            const data = await searchCat();
+            setCategories(data);
           } catch (err) {
             console.error(err);
+          } finally {
+            setLoading(false);
           }
         };
     
@@ -42,6 +47,9 @@ const FinderPage = () => {
         setCategories(await searchCat("name", catsearch));
       }
     };
+    if (loading) {
+      return <div>Loading...</div>;
+  }
     return (
     <main>
       <div className='float-left'>
