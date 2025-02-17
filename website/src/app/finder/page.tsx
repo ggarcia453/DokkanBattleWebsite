@@ -8,6 +8,9 @@ import { Query, operations } from '../types/conditions';
 const searchCat = async (mode: string = "", query: string = "") => {
   return await fetchData("category", mode, query);
 }
+const searchChar = async(mode: string= "", query: string = "") =>{
+  return await fetchData("card", mode, query);
+}
 
 const FinderPage = () => {
     const [loading, setLoading] = useState(true);
@@ -16,6 +19,11 @@ const FinderPage = () => {
     const [catsearch, setCatSearch] = useState("");
     const [qstring, setqstring] = useState("");
     const [addcat, setaddCat] = useState(true);
+    const parseQstring = (qstring: string) => {
+      const arr = qstring.split(" ");
+      console.log(arr);
+      return arr;
+    }
     useEffect(() => {
         const loadInitialData = async () => {
           try {
@@ -47,6 +55,12 @@ const FinderPage = () => {
         setCategories(await searchCat("name", catsearch));
       }
     };
+    const handleSubmit = async () => {
+      parseQstring(qstring);
+      console.log(await searchChar());
+      setqstring("");
+      setaddCat(true);
+    };
     if (loading) {
       return <div>Loading...</div>;
   }
@@ -70,7 +84,7 @@ const FinderPage = () => {
             </tbody>
           </table>
           <div className="flex flex-col space-y-4">
-            <button className='border px-4 py-2'>
+            <button className='border px-4 py-2' onClick={handleSubmit}>
               Submit Query
             </button>
             <button className="border px-4 py-2" onClick={() => {
@@ -81,7 +95,7 @@ const FinderPage = () => {
             </button>
             <div className="flex space-x-4">
               <button className="border px-4 py-2"onClick={() => {
-                if (addcat)
+                if (addcat) return;
                 setqstring(qstring + " & ");
                 setaddCat(true);
               }}>AND</button>
