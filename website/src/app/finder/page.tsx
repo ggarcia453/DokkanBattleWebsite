@@ -19,11 +19,6 @@ const FinderPage = () => {
     const [catsearch, setCatSearch] = useState("");
     const [qstring, setqstring] = useState("");
     const [addcat, setaddCat] = useState(true);
-    const parseQstring = (qstring: string) => {
-      const arr = qstring.split(" ");
-      console.log(arr);
-      return arr;
-    }
     useEffect(() => {
         const loadInitialData = async () => {
           try {
@@ -56,8 +51,9 @@ const FinderPage = () => {
       }
     };
     const handleSubmit = async () => {
-      parseQstring(qstring);
-      console.log(await searchChar());
+      const q = new Query(qstring);
+      await q.fillOut();
+      setRes(await q.grabChars());
       setqstring("");
       setaddCat(true);
     };
@@ -88,6 +84,7 @@ const FinderPage = () => {
               Submit Query
             </button>
             <button className="border px-4 py-2" onClick={() => {
+              setRes([]);
               setqstring("");
               setaddCat(true);
             }}>
@@ -118,6 +115,33 @@ const FinderPage = () => {
               </h2>
               <div className="overflow-auto">
                 <table className="w-full border-collapse border">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border p-2">Title</th>
+                    <th className="border p-2">Name</th>
+                    <th className="border p-2">HP</th>
+                    <th className="border p-2">ATK</th>
+                    <th className="border p-2">DEF</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {res.map((card) => (
+                    <tr key={card.id}>
+                      <td className="border p-2">{card.title}</td>
+                      <td className="border p-2">{card.name}</td>
+                      <td className="border p-2">{card.hp}</td>
+                      <td className="border p-2">{card.atk}</td>
+                      <td className="border p-2">{card.def}</td>
+                    </tr>
+                  ))}
+                  {res.length === 0 && (
+                    <tr>
+                      <td colSpan={6} className="text-center p-4 text-gray-500">
+                        No characters found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
                 </table>
               </div>
             </div>
