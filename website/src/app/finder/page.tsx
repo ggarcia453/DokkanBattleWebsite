@@ -8,9 +8,6 @@ import { Query, operations } from '../types/conditions';
 const searchCat = async (mode: string = "", query: string = "") => {
   return await fetchData("category", mode, query);
 }
-const searchChar = async(mode: string= "", query: string = "") =>{
-  return await fetchData("card", mode, query);
-}
 
 const FinderPage = () => {
     const [loading, setLoading] = useState(true);
@@ -53,7 +50,7 @@ const FinderPage = () => {
     const handleSubmit = async () => {
       const q = new Query(qstring);
       await q.fillOut();
-      setRes(await q.grabChars());
+      setRes((await q.grabChars()).sort((c, d) => c.id - d.id));
       setqstring("");
       setaddCat(true);
     };
