@@ -11,7 +11,8 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("http://localhost:3000") // Ensure no trailing slash
             .AllowAnyHeader()
             .AllowAnyMethod();
-
+        policy.WithOrigins("http://192.168.1.159:3000")
+            .AllowAnyHeader();
     });
 });
 
