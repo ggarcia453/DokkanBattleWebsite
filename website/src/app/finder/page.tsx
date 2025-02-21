@@ -31,11 +31,7 @@ const FinderPage = () => {
     
         loadInitialData();
       }, []);
-
-    const addtoCatToQuery = (cat: Category) => {
-      setqstring(qstring + cat.name);
-    };
-    
+   
     const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
       setCatSearch(event.target.value)
       console.log(event.target.value)
@@ -62,20 +58,23 @@ const FinderPage = () => {
       <div className='float-left'>
         <input type="text" placeholder='Search Categories' value={catsearch} onKeyDown={handleKeyDown} onChange={handleChange}/>
         <div className="flex items-start gap-4 mt-2">
-          <table className="border-collapse border">
-            <thead>
-              <tr>
-                <th>Name</th>
-              </tr>
-            </thead>
-            <tbody>
-              {categories.map((cat) => (
-                <tr key={cat.id} className='hover:bg-blue-50 transition-colors duration-150 ease-in-out' onClick={() => {if (addcat) {addtoCatToQuery(cat); setaddCat(false)}}}>
-                  <td className="border text-center p-2">{cat.name}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <select
+            className="border p-2 rounded"
+            onChange={(e) => {
+              if (addcat && e.target.value) {
+                setqstring(qstring + e.target.value);
+                setaddCat(false);
+                setCatSearch("");
+              }
+            }}
+          >
+            <option>Select a category...</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.name}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
           <div className="flex flex-col space-y-4">
             <button className='border px-4 py-2' onClick={handleSubmit}>
               Submit Query
@@ -104,7 +103,9 @@ const FinderPage = () => {
               <button className="border px-7 py-2" onClick={() => {setqstring(qstring + ")")}}>)</button>
             </div>
           </div>
-          <p>"{qstring}"</p>
+          {res.length== 0 &&(
+            <p>Query = {qstring}</p>
+          )}
           {res.length != 0 && (
             <div className="flex-1">
               <h2 className="text-xl font-semibold mb-2">
